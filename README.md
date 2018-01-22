@@ -1,4 +1,4 @@
-# InfluxDB
+# InfluxDB Particle library
 
 A Particle library for InfluxDB.
 
