@@ -11,7 +11,7 @@ database.
 
 ## Usage
 
-Build the photoresistor [tutorial](https://docs.particle.io/guide/getting-started/examples/photon/#read-your-photoresistor-function-and-variable), create an InfluxDB database called `sensordata`, add the InfluxDB library to your project and follow this simple example:
+Build the photoresistor [tutorial](https://docs.particle.io/guide/getting-started/examples/photon/#read-your-photoresistor-function-and-variable), create an InfluxDB database called `sensordata`, add the InfluxDB library to your project, and follow this simple example:
 
 ```
 #define USERNAME "my_username"
@@ -65,7 +65,7 @@ Points are stored as follows:
 
     DEVICENAME deviceID=DEVICEID VARIABLEID1=VARIABLEVALUE1(,VARIABLEID2=VARIABLEVALUE2 etc)
 
-`DEVICENAME` is the measurement name in the InfluxDB database. This defaults to `particle` in InfluxDB Library. Change it with:
+`DEVICENAME` is the measurement name in the InfluxDB database. Future versions will retrieve your device name  from Particle Cloud and use it. It defaults currently to `particle`. For now, change it with:
 
     idb.setDeviceName("my_device");
 
