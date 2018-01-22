@@ -71,11 +71,11 @@ Points are stored as follows:
 
 `DEVICEID` is the ID of your device as returned by `System.deviceID()`. Each point is tagged in the database with the device ID.
 
-`VARIABLEID` and `VARIABLEVALUE` are the id and values of variables added with the command:
+`VARIABLEID` and `VARIABLEVALUE` are the id and value of variables added with the command:
 
     idb.add("photoresistor", analogvalue);
 
-Up to `MAX_VALUES` (10 in the code) can be added between updates to the database. Values added beyond this limit are ignored. (This is an arbitrary limit pending further investigation of the API limits.)
+Up to `MAX_VALUES` (currently, 10) can be added between updates to the database. Values added beyond this limit are ignored. (This is an arbitrary limit pending further investigation of the API limits.)
 
 To write the points to the database i.e. make the API request, call:
 
