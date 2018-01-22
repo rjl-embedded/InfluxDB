@@ -72,12 +72,6 @@
    _dsName = deviceName;
  }
 
-
- /**
-  * Turns on or off debug messages
-  * @debug is a bool flag to activate or deactivate messages
-  */
-
  void InfluxDB::setDebug(bool debug) {
      _debug = debug;
  }
