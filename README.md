@@ -83,6 +83,8 @@ To write the points to the database i.e. make the API request, call:
 
 This returns `true` if the HTTP response code 204 (successful write operation) is received, `false` otherwise.
 
+*IMPORTANT*: The library does not currently store a timestamp during `InfluxDB::add()` so all variables will receive the timestamp allocated at `sendAll()`. This will be improved in the next version.
+
 Put the device in debug mode with:
 
     idb.setDebug(true);
