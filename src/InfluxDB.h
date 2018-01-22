@@ -1,10 +1,16 @@
 #pragma once
 
-/* InfluxDB library by Richard Lyon
+/*
+ InfluxDB library
+ Copyright 2018 Richard Lyon
+ Licensed under the GNU General Public license
  */
 
 #ifndef _INFLUXDB_
 #define _INFLUXDB_
+#endif
+#ifndef VERSION
+#define VERSION 0.1.0
 #endif
 #ifndef IP
 #define IP IPAddress(139,59,166,111)
@@ -17,7 +23,6 @@
 #endif
 
 #include "Particle.h"
-#include "authentication.h"
 #include "HttpClient.h"
 
 struct Value {
@@ -28,7 +33,7 @@ struct Value {
 class InfluxDB
 {
 public:
-  Influxdb(char* username, char* password);
+  InfluxDB(char* username, char* password);
   void add(char *variable_id, double value);
   bool sendAll();
   void printResponse(http_response_t &response);

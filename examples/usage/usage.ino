@@ -1,16 +1,13 @@
-// Example usage for InfluxDB library by Richard Lyon.
 /*
- * Remember to create "authentication.h" in src with your InfluxDB credentials
- * as follows:
- *
- * #define USERNAME "my_username"
- * #define PASSWORD "my_password"
- *
- * This will be included by InfluxDB.h - don't add it here.
+ Example usage for InfluxDB library by Richard Lyon.
  */
 
-#include "Influxdb.h"
-Influxdb idb = Influxdb(USERNAME, PASSWORD);
+// InfluxDB credentials
+#define USERNAME "my_username"
+#define PASSWORD "my_password"
+
+#include "InfluxDB.h"
+InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
 
 int photoresistor = A0;
 int power = A5;
@@ -31,8 +28,8 @@ void loop() {
   analogvalue = analogRead(photoresistor) * 1.0;
   idb.add("photoresistor", analogvalue);
   idb.add("dummy", 3.1415);
-  if (idb.sendAll()) {            // call this to add points to InfluxDB
-    Serial.println("Success");
+  if (idb.sendAll()) {            // call this to send points to InfluxDB
+    Serial.println("InfluxDB updated");
   }
   delay(1000);
 }

@@ -1,10 +1,12 @@
-/* InfluxDB library by Richard Lyon
+/* InfluxDB library
+   Copyright 2018 Richard Lyon
+   Licensed under the GNU General Public license
  */
 
  #include "HttpClient.h"
- #include "Influxdb.h"
+ #include "InfluxDB.h"
 
- Influxdb::Influxdb(char* username, char* password)
+ InfluxDB::InfluxDB(char* username, char* password)
  {
    _dsID = System.deviceID();
    _dsName = String("particle");
@@ -16,7 +18,7 @@
    _currentValue = 0;
  }
 
- void Influxdb::add(char *variable_id, double value)
+ void InfluxDB::add(char *variable_id, double value)
  {
    (pvalue + _currentValue)->idName = variable_id;
    (pvalue + _currentValue)->idValue = value;
@@ -27,7 +29,7 @@
    }
  }
 
- bool Influxdb::sendAll()
+ bool InfluxDB::sendAll()
  {
    String idMeasurement = _dsName;
    String tag_set = String::format("deviceID=%s", _dsID.c_str());
@@ -59,14 +61,14 @@
    return (response.status == 204) ? true : false;
  }
 
- void Influxdb::printResponse(http_response_t &response)
+ void InfluxDB::printResponse(http_response_t &response)
  {
    Serial.print("HTTP Response: ");
    Serial.println(response.status);
    Serial.println(response.body);
  }
 
- void Influxdb::setDeviceName(char* deviceName)
+ void InfluxDB::setDeviceName(char* deviceName)
  {
    _dsName = deviceName;
  }
@@ -77,6 +79,6 @@
   * @debug is a bool flag to activate or deactivate messages
   */
 
- void Influxdb::setDebug(bool debug) {
+ void InfluxDB::setDebug(bool debug) {
      _debug = debug;
  }

@@ -1,33 +1,48 @@
 # InfluxDB
 
-A Particle library for InfluxDB
+A Particle library for InfluxDB.
 
-## Welcome to your library!
+## About InfluxDB Particle library
 
-To get started, modify the sources in [src](src). Rename the example folder inside [examples](examples) to a more meaningful name and add additional examples in separate folders.
-
-To compile your example you can use `particle compile examples/usage` command in [Particle CLI](https://docs.particle.io/guide/tools-and-features/cli#update-your-device-remotely) or use our [Desktop IDE](https://docs.particle.io/guide/tools-and-features/dev/#compiling-code).
-
-Libraries can also depend on other libraries. To add a dependency use [`particle library add`](https://docs.particle.io/guide/tools-and-features/cli#adding-a-library) or [library management](https://docs.particle.io/guide/tools-and-features/dev/#managing-libraries) in Desktop IDE.
-
-After the library is done you can upload it with `particle library upload` or `Upload` command in the IDE. This will create a private (only visible by you) library that you can use in other projects. If you wish to make your library public, use `particle library publish` or `Publish` command.
-
-_TODO: update this README_
+InfluxDB is a time series database built to handle high write and query loads. It's ideal as
+a backing store for timestamped IoT sensor data. More information can be found [here](https://docs.influxdata.com/influxdb/v1.4/).
+InfluxDB Particle library is a simple client for writing Particle data to an InfluxDB
+database.  
 
 ## Usage
 
-Connect XYZ hardware, add the InfluxDB library to your project and follow this simple example:
+Build the photoresistor [tutorial](https://docs.particle.io/guide/getting-started/examples/photon/#read-your-photoresistor-function-and-variable), create an InfluxDB database called `sensordata`, add the InfluxDB library to your project and follow this simple example:
 
 ```
+#define USERNAME "my_username"
+#define PASSWORD "my_password"
+
 #include "InfluxDB.h"
-InfluxDB influxDB;
+InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
+
+int photoresistor = A0;
+int power = A5;
+double analogvalue;
 
 void setup() {
-  influxDB.begin();
+  Serial.begin(9600);
+  pinMode(photoresistor,INPUT);
+  pinMode(power,OUTPUT);
+  digitalWrite(power,HIGH);
+
+  // initialise InfluxDB
+  idb.setDebug(true);             // defaults to false
+  idb.setDeviceName("my_device"); // defaults to "particle"
 }
 
 void loop() {
-  influxDB.process();
+  analogvalue = analogRead(photoresistor) * 1.0;
+  idb.add("photoresistor", analogvalue);
+  idb.add("dummy", 3.1415);
+  if (idb.sendAll()) {            // call this to send points to InfluxDB
+    Serial.println("InfluxDB updated");
+  }
+  delay(1000);
 }
 ```
 
@@ -35,7 +50,44 @@ See the [examples](examples) folder for more details.
 
 ## Documentation
 
-TODO: Describe `InfluxDB`
+Initialise the client with your InfluxDB authentication details:
+
+    InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
+
+
+InfluxDB supports a built-in HTTP API (described [here](https://docs.influxdata.com/influxdb/v1.4/guides/writing_data/)). InfluxDB uses the Particle HTTPClient library to send a `post` request to the `/write` endpoint.
+
+InfluxDB library writes to InfluxDB database `sensordata` (this will be configurable in future versions) i.e.
+
+    /write?db=sensordata
+
+Points are stored as follows:
+
+    DEVICENAME deviceID=DEVICEID VARIABLEID1=VARIABLEVALUE1(,VARIABLEID2=VARIABLEVALUE2 etc)
+
+`DEVICENAME` is the measurement name in the InfluxDB database. This defaults to `particle` in InfluxDB Library is changed with:
+
+    idb.setDeviceName("my_device");
+
+`DEVICEID` is the ID of your device as returned by `System.deviceID()`. Each point is tagged in the database with the device ID.
+
+`VARIABLEID` and `VARIABLEVALUE` are the id and values of variables added with the command:
+
+    idb.add("photoresistor", analogvalue);
+
+Up to `MAX_VALUES` (10 in the code) can be added between updates to the database. Values added beyond this limit are ignored. (This is an arbitrary limit pending further investigation of the API limits.)
+
+To write the points to the database i.e. make the API request, call:
+
+    idb.sendAll();
+
+This returns `true` if the HTTP response code 204 (successful write operation) is received, `false` otherwise.
+
+Put the device in debug mode with:
+
+    idb.setDebug(true);
+
+This will print to the serial line the data being sent to InfluxDB.
 
 ## Contributing
 
@@ -51,11 +103,11 @@ To compile an example, use `particle compile examples/usage` command in [Particl
 
 After your changes are done you can upload them with `particle library upload` or `Upload` command in the IDE. This will create a private (only visible by you) library that you can use in other projects. Do `particle library add InfluxDB_myname` to add the library to a project on your machine or add the InfluxDB_myname library to a project on the Web IDE or Desktop IDE.
 
-At this point, you can create a [GitHub pull request](https://help.github.com/articles/about-pull-requests/) with your changes to the original library. 
+At this point, you can create a [GitHub pull request](https://help.github.com/articles/about-pull-requests/) with your changes to the original library.
 
 If you wish to make your library public, use `particle library publish` or `Publish` command.
 
 ## LICENSE
 Copyright 2018 Richard Lyon
 
-Licensed under the <insert your choice of license here> license
+Licensed under the GNU General Public license
