@@ -89,6 +89,8 @@ Put the device in debug mode with:
 
 This will print to the serial line the data being sent to InfluxDB.
 
+The library has been tested on a Particle Photon (System Firmware 0.6.3) and Core (unknown firmware version but recently updated).
+
 ## Changelog
 
 ### 0.1.0
