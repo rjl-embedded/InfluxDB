@@ -48,7 +48,6 @@
    request.body = requestString;
    http.post(request, response);
    if(_debug) {
-     Serial.println(request.body);
      printResponse(response);
    }
    _currentValue = 0;
