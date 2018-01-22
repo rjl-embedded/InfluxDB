@@ -65,7 +65,7 @@ Points are stored as follows:
 
     DEVICENAME deviceID=DEVICEID VARIABLEID1=VARIABLEVALUE1(,VARIABLEID2=VARIABLEVALUE2 etc)
 
-`DEVICENAME` is the measurement name in the InfluxDB database. This defaults to `particle` in InfluxDB Library is changed with:
+`DEVICENAME` is the measurement name in the InfluxDB database. This defaults to `particle` in InfluxDB Library. Change it with:
 
     idb.setDeviceName("my_device");
 
@@ -88,6 +88,11 @@ Put the device in debug mode with:
     idb.setDebug(true);
 
 This will print to the serial line the data being sent to InfluxDB.
+
+## Changelog
+
+### 0.1.0
+Initial release.
 
 ## Contributing
 
