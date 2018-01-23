@@ -3,8 +3,8 @@
  */
 
 // InfluxDB credentials
-#define USERNAME "my_username"
-#define PASSWORD "my_password"
+#define USERNAME "kingswood_admin"
+#define PASSWORD "Wbtc0rar"
 
 #include "InfluxDB.h"
 InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
