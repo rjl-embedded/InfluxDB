@@ -21,7 +21,7 @@ void setup() {
 
   // initialise InfluxDB
   idb.setDatabase("test");        // defaults to 'sensordata'
-  idb.setDeviceName("my_device"); // defaults to "particle"
+  idb.setDeviceName("elmon");     // defaults to "particle"
   idb.setDebug(true);             // defaults to false
 }
 
