@@ -57,9 +57,15 @@ Initialise the client with your InfluxDB authentication details:
 
 InfluxDB supports a built-in HTTP API (described [here](https://docs.influxdata.com/influxdb/v1.4/guides/writing_data/)). InfluxDB uses the Particle HTTPClient library to send a `post` request to the `/write` endpoint.
 
-InfluxDB library writes to InfluxDB database `sensordata` (this will be configurable in future versions) i.e.
+By default, InfluxDB library writes to InfluxDB database `sensordata` i.e.
 
     /write?db=sensordata
+
+Change the target database with:
+
+    idb.setDatabase("test");        // defaults to 'sensordata'
+
+Ensure that `test` exists (future versions will check for you and create the database if necessary).
 
 Points are stored as follows:
 
