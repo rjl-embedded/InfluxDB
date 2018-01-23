@@ -39,8 +39,8 @@ public:
   InfluxDB(char* username, char* password);
   void add(char *variable_id, double value);
   bool sendAll();
-  void setDeviceName(char* deviceName);
   String setDatabase(String databaseName);
+  String setDeviceName(String deviceName);
   void setDebug(bool debug);
 private:
   char* _username;

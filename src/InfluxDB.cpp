@@ -71,7 +71,7 @@
    Serial.println(response.body);
  }
 
- void InfluxDB::setDeviceName(char* deviceName)
+ String InfluxDB::setDeviceName(String deviceName)
  {
    _deviceName = deviceName;
  }
