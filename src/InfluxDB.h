@@ -38,12 +38,13 @@ public:
   bool sendAll();
   void printResponse(http_response_t &response);
   void setDeviceName(char* deviceName);
+  char* setDatabase(char* databaseName);
   void setDebug(bool debug);
 private:
   String _dsID;
   String _dsName;
-  String _databaseID;
-  Value * pvalue;
+  char* _databaseName;
+  Value* pvalue;
   uint8_t _currentValue;
   HttpClient http;
   http_request_t request;

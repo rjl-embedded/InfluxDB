@@ -20,8 +20,9 @@ void setup() {
   digitalWrite(power,HIGH);
 
   // initialise InfluxDB
-  idb.setDebug(true);             // defaults to false
+  idb.setDatabase("test");        // defaults to 'sensordata'
   idb.setDeviceName("my_device"); // defaults to "particle"
+  idb.setDebug(true);             // defaults to false
 }
 
 void loop() {
