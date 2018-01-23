@@ -33,6 +33,7 @@
 
    if (timestamp) {
      // process batch of values
+     (pvalue + _currentValue)->timestamp_val = timestamp;
    } else {
      // process single value
      (pvalue + _currentValue)->timestamp_val = Time.now();
@@ -46,11 +47,10 @@
 
  bool InfluxDB::sendAll()
  {
-   String idMeasurement = _deviceName;
-   String tag_set = String::format("deviceID=%s", _deviceID.c_str());
+   unsigned long timestampLast;
+   String idMeasurement = _deviceName; // e.g. particle
+   String tag_set = String::format("deviceID=%s", _deviceID.c_str()); // e.g. deviceID=54395594308
    String field_set;
-   String requestString;
-
    // build field set e.g. temperature=21.3,humidity=34.5
    for (int i = 0; i < _currentValue; i++) {
      // e.g. temperature=21.3
@@ -60,23 +60,24 @@
      }
      field_set.concat(tempString);
    }
+   _currentValue = 0;
 
-   requestString = String::format("%s,%s %s", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str());
    // e.g. particle,deviceID=54395594308 temperature=21.3,humidity=34.5
+   String requestString = String::format("%s,%s %s", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str());
    request.body = requestString;
    request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
    http.post(request, response);
+
    if(_debug) {
      printDebug(request, response);
    }
-   _currentValue = 0;
+
    if (response.status == 204) {
      return true;
    } else {
      Particle.publish("ERROR", response.body, PRIVATE);
      return false;
    }
-   return (response.status == 204) ? true : false;
  }
 
  void InfluxDB::printDebug(http_request_t &request, http_response_t &response)
