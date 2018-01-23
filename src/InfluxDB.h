@@ -37,6 +37,7 @@ class InfluxDB
 {
 public:
   InfluxDB(char* username, char* password);
+  void begin();
   void add(char *variable_id, double value);
   bool sendAll();
   String setDatabase(String databaseName);

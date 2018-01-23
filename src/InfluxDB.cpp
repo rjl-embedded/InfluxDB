@@ -12,12 +12,15 @@
    _password = password;
    _databaseName = setDatabase(DATABASE);
    _deviceID = System.deviceID();
-   _deviceName = String("particle");
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
    _currentValue = 0;
  }
+
+void InfluxDB::begin() {
+  _deviceName = setDeviceName(DEVICENAME);
+}
 
  void InfluxDB::add(char *variable_id, double value)
  {
