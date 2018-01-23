@@ -24,6 +24,9 @@
 #ifndef DATABASE
 #define DATABASE "sensordata"
 #endif
+#ifndef DEVICENAME
+#define DEVICENAME "particle"
+#endif
 
 #include "Particle.h"
 #include "HttpClient.h"
