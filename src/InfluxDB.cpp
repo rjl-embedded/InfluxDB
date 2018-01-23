@@ -34,6 +34,7 @@
    if (timestamp) {
      // process batch of values
    } else {
+     // process single value
      (pvalue + _currentValue)->timestamp_val = Time.now();
    }
    _currentValue++;
