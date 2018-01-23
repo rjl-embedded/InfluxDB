@@ -34,6 +34,7 @@
 struct Value {
     char  *idName;
     float idValue;
+    unsigned long timestamp_val;
 };
 
 class InfluxDB
@@ -41,6 +42,7 @@ class InfluxDB
 public:
   InfluxDB(char* username, char* password);
   void add(char *variable_id, double value);
+  void add(char *variable_id, double value, unsigned long timestamp);
   bool sendAll();
   String setDatabase(String databaseName);
   String setDeviceName(String databaseName);

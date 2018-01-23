@@ -11,6 +11,7 @@ InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
 
 int photoresistor = A0;
 int power = A5;
+long int timestamp;
 double analogvalue;
 
 void setup() {
@@ -26,6 +27,7 @@ void setup() {
 }
 
 void loop() {
+  timestamp = Time.now();
   analogvalue = analogRead(photoresistor) * 1.0;
   idb.add("photoresistor", analogvalue);
   idb.add("dummy", 3.1415);
