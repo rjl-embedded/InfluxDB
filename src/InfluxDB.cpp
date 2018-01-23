@@ -18,10 +18,6 @@
    _currentValue = 0;
  }
 
-void InfluxDB::begin() {
-  _deviceName = setDeviceName(DEVICENAME);
-}
-
  void InfluxDB::add(char *variable_id, double value)
  {
    (pvalue + _currentValue)->idName = variable_id;

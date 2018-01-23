@@ -15,7 +15,6 @@ double analogvalue;
 
 void setup() {
   Serial.begin(9600);
-  idb.begin();
   pinMode(photoresistor,INPUT);
   pinMode(power,OUTPUT);
   digitalWrite(power,HIGH);
