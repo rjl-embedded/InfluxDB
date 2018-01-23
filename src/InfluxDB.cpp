@@ -50,7 +50,7 @@
    request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
    http.post(request, response);
    if(_debug) {
-     printResponse(response);
+     printDebug(request, response);
    }
    _currentValue = 0;
    if (response.status == 204) {
@@ -62,8 +62,10 @@
    return (response.status == 204) ? true : false;
  }
 
- void InfluxDB::printResponse(http_response_t &response)
+ void InfluxDB::printDebug(http_request_t &request, http_response_t &response)
  {
+   Serial.println(request.path);
+   Serial.println(request.body);
    Serial.print("HTTP Response: ");
    Serial.println(response.status);
    Serial.println(response.body);

@@ -39,7 +39,6 @@ public:
   InfluxDB(char* username, char* password);
   void add(char *variable_id, double value);
   bool sendAll();
-  void printResponse(http_response_t &response);
   void setDeviceName(char* deviceName);
   String setDatabase(String databaseName);
   void setDebug(bool debug);
@@ -55,4 +54,5 @@ private:
   http_request_t request;
   http_response_t response;
   bool _debug = false;
+  void printDebug(http_request_t &request, http_response_t &response);
 };
