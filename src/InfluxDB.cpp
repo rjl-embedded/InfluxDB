@@ -32,7 +32,7 @@
    (pvalue + _currentValue)->idValue = value;
 
    if (timestamp) {
-     // process sample
+     // process batch of values
    } else {
      (pvalue + _currentValue)->timestamp_val = Time.now();
    }
@@ -50,7 +50,9 @@
    String field_set;
    String requestString;
 
+   // build field set e.g. temperature=21.3,humidity=34.5
    for (int i = 0; i < _currentValue; i++) {
+     // e.g. temperature=21.3
      String tempString = String::format("%s=%.1f", (pvalue + i)->idName, (pvalue + i)->idValue);
      if (i>0) {
        field_set.concat(",");
@@ -59,6 +61,7 @@
    }
 
    requestString = String::format("%s,%s %s", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str());
+   // e.g. particle,deviceID=54395594308 temperature=21.3,humidity=34.5
    request.body = requestString;
    request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
    http.post(request, response);
