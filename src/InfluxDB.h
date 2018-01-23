@@ -46,8 +46,8 @@ public:
 private:
   char* _username;
   char* _password;
-  String _dsID;
-  String _dsName;
+  String _deviceID;
+  String _deviceName;
   String _databaseName;
   Value* pvalue;
   uint8_t _currentValue;

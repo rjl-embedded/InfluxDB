@@ -11,8 +11,8 @@
    _username = username;
    _password = password;
    _databaseName = setDatabase(DATABASE);
-   _dsID = System.deviceID();
-   _dsName = String("particle");
+   _deviceID = System.deviceID();
+   _deviceName = String("particle");
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
@@ -32,8 +32,8 @@
 
  bool InfluxDB::sendAll()
  {
-   String idMeasurement = _dsName;
-   String tag_set = String::format("deviceID=%s", _dsID.c_str());
+   String idMeasurement = _deviceName;
+   String tag_set = String::format("deviceID=%s", _deviceID.c_str());
    String field_set;
    String requestString;
 
@@ -71,7 +71,7 @@
 
  void InfluxDB::setDeviceName(char* deviceName)
  {
-   _dsName = deviceName;
+   _deviceName = deviceName;
  }
 
  String InfluxDB::setDatabase(String databaseName)
