@@ -8,6 +8,8 @@
 
  InfluxDB::InfluxDB(char* username, char* password)
  {
+   _username = username;
+   _password = password;
    _dsID = System.deviceID();
    _dsName = String("particle");
    _databaseName = setDatabase("sensordata");
@@ -46,6 +48,7 @@
 
    requestString = String::format("%s,%s %s", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str());
    request.body = requestString;
+   request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
    http.post(request, response);
    if(_debug) {
      printResponse(response);
