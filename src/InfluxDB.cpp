@@ -12,12 +12,11 @@
    _password = password;
    _databaseName = setDatabase(DATABASE);
    _deviceID = System.deviceID();
-   _dsID = System.deviceID();
-   _dsName = String("particle");
-   _databaseID = "sensordata";
+   _deviceName = String("particle");
+   _databaseName = "sensordata";
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
-   request.path = String::format("/write?db=%s&precision=s&u=%s&p=%s",_databaseID.c_str(),username,password);
+   request.path = String::format("/write?db=%s&precision=s&u=%s&p=%s",_databaseName.c_str(),username,password);
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
    _currentValue = 0;
  }
