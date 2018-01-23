@@ -21,6 +21,9 @@
 #ifndef MAX_VALUES
 #define MAX_VALUES 10
 #endif
+#ifndef DATABASE
+#define DATABASE "sensordata"
+#endif
 
 #include "Particle.h"
 #include "HttpClient.h"
@@ -38,12 +41,14 @@ public:
   bool sendAll();
   void printResponse(http_response_t &response);
   void setDeviceName(char* deviceName);
-  char* setDatabase(char* databaseName);
+  String setDatabase(String databaseName);
   void setDebug(bool debug);
 private:
+  char* _username;
+  char* _password;
   String _dsID;
   String _dsName;
-  char* _databaseName;
+  String _databaseName;
   Value* pvalue;
   uint8_t _currentValue;
   HttpClient http;

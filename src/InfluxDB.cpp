@@ -10,12 +10,11 @@
  {
    _username = username;
    _password = password;
+   _databaseName = setDatabase(DATABASE);
    _dsID = System.deviceID();
    _dsName = String("particle");
-   _databaseName = setDatabase("sensordata");
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
-   request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName,username,password);
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
    _currentValue = 0;
  }
@@ -75,9 +74,10 @@
    _dsName = deviceName;
  }
 
- char* InfluxDB::setDatabase(char* databaseName)
+ String InfluxDB::setDatabase(String databaseName)
  {
    // TODO: add check that database exists or create
+   _databaseName = databaseName;
    return databaseName;
  }
 
