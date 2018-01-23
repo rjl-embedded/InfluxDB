@@ -13,15 +13,26 @@
    _databaseID = "sensordata";
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
-   request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseID.c_str(),username,password);
+   request.path = String::format("/write?db=%s&precision=s&u=%s&p=%s",_databaseID.c_str(),username,password);
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
    _currentValue = 0;
  }
 
  void InfluxDB::add(char *variable_id, double value)
  {
+   return add(variable_id, value, NULL);
+ }
+
+ void InfluxDB::add(char *variable_id, double value, unsigned long timestamp)
+ {
    (pvalue + _currentValue)->idName = variable_id;
    (pvalue + _currentValue)->idValue = value;
+
+   if (timestamp) {
+     // process sample
+   } else {
+     (pvalue + _currentValue)->timestamp_val = Time.now();
+   }
    _currentValue++;
    if (_currentValue > MAX_VALUES) {
      Serial.println("You are sending more than the maximum of consecutive variables");
