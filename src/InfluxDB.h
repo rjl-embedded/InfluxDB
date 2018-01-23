@@ -43,7 +43,7 @@ public:
   void add(char *variable_id, double value);
   bool sendAll();
   String setDatabase(String databaseName);
-  String setDeviceName(String deviceName);
+  String setDeviceName(String databaseName);
   void setDebug(bool debug);
 private:
   char* _username;
