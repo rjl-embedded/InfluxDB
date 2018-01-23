@@ -77,6 +77,7 @@ void InfluxDB::begin() {
  String InfluxDB::setDeviceName(String deviceName)
  {
    _deviceName = deviceName;
+   return deviceName;
  }
 
  String InfluxDB::setDatabase(String databaseName)
