@@ -19,7 +19,7 @@
 #define PORT 8086
 #endif
 #ifndef MAX_VALUES
-#define MAX_VALUES 10
+#define MAX_VALUES 1000
 #endif
 #ifndef DATABASE
 #define DATABASE "sensordata"
@@ -59,5 +59,6 @@ private:
   http_request_t request;
   http_response_t response;
   bool _debug = false;
+  String makeFieldSet(Value* pvalue);
   void printDebug(http_request_t &request, http_response_t &response);
 };

@@ -4,8 +4,7 @@ A Particle library for InfluxDB.
 
 ## About InfluxDB Particle library
 
-InfluxDB is a time series database built to handle high write and query loads. It's ideal as
-a backing store for timestamped IoT sensor data. More information can be found [here](https://docs.influxdata.com/influxdb/v1.4/).
+InfluxDB is a time series database built to handle high write and query loads. It's a good backing store for timestamped IoT sensor data. More information can be found [here](https://docs.influxdata.com/influxdb/v1.4/).
 InfluxDB Particle library is a simple client for writing Particle data to an InfluxDB
 database.  
 
@@ -14,33 +13,36 @@ database.
 Build the photoresistor [tutorial](https://docs.particle.io/guide/getting-started/examples/photon/#read-your-photoresistor-function-and-variable), create an InfluxDB database called `sensordata`, add the InfluxDB library to your project, and follow this simple example:
 
 ```
-#define USERNAME "my_username"
-#define PASSWORD "my_password"
-
+#include "authenticate.h" // InfluxDB credentials
 #include "InfluxDB.h"
 InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
 
-int photoresistor = A0;
-int power = A5;
-double analogvalue;
+long int timestamp;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(photoresistor,INPUT);
-  pinMode(power,OUTPUT);
-  digitalWrite(power,HIGH);
-
   // initialise InfluxDB
+  idb.setDatabase("test");        // defaults to 'sensordata'
+  idb.setDeviceName("elmon");     // defaults to "particle"
   idb.setDebug(true);             // defaults to false
-  idb.setDeviceName("my_device"); // defaults to "particle"
 }
 
+int batchcount = 0;
 void loop() {
-  analogvalue = analogRead(photoresistor) * 1.0;
-  idb.add("photoresistor", analogvalue);
-  idb.add("dummy", 3.1415);
+  idb.add("single1", 1.0);
+  delay(2000);
+
+  timestamp = Time.now();
+  idb.add("batch1", 2.0, timestamp);
+  idb.add("batch2", 3.0, timestamp);
+  idb.add("batch3", 4.0, timestamp);
+  delay(2000);
+
+  idb.add("single2", 5.0);
+  delay(2000);
+
   if (idb.sendAll()) {            // call this to send points to InfluxDB
-    Serial.println("InfluxDB updated");
+    // Serial.println("InfluxDB updated");
   }
   delay(1000);
 }
@@ -69,7 +71,7 @@ Ensure that `test` exists (future versions will check for you and create the dat
 
 Points are stored as follows:
 
-    DEVICENAME deviceID=DEVICEID VARIABLEID1=VARIABLEVALUE1(,VARIABLEID2=VARIABLEVALUE2 etc)
+    DEVICENAME deviceID=DEVICEID VARIABLEID1=VARIABLEVALUE1(,VARIABLEID2=VARIABLEVALUE2 etc) UNIX_TIMESTAMP
 
 `DEVICENAME` is the measurement name in the InfluxDB database. Future versions will retrieve your device name  from Particle Cloud and use it. It defaults currently to `particle`. For now, change it with:
 
@@ -77,19 +79,29 @@ Points are stored as follows:
 
 `DEVICEID` is the ID of your device as returned by `System.deviceID()`. Each point is tagged in the database with the device ID.
 
-`VARIABLEID` and `VARIABLEVALUE` are the id and value of variables added with the command:
+`VARIABLEID` and `VARIABLEVALUE` are the id and value of variables.
+
+`UNIX_TIMESTAMP` is the Unix time of the sample in seconds
+
+Points are buffered prior to sending. There are two ways of adding points to the buffer.
 
     idb.add("photoresistor", analogvalue);
 
+will cause a single point to be written to the database, with the timestamp corresponding to the time `add()` is called.
+
+    timestamp = Time.now();
+    idb.add("batch1", 2.0, timestamp);
+    idb.add("batch2", 3.0, timestamp);
+
+will cause all the points added at timestamp to be written to the datanbase in a single request, with the timestamp corresponding to `timestamp`.
+
 Up to `MAX_VALUES` (currently, 10) can be added between updates to the database. Values added beyond this limit are ignored. (This is an arbitrary limit pending further investigation of the API limits.)
 
-To write the points to the database i.e. make the API request, call:
+To write the point buffer to the database i.e. make the API request, call:
 
     idb.sendAll();
 
 This returns `true` if the HTTP response code 204 (successful write operation) is received, `false` otherwise.
-
-*IMPORTANT*: The library does not currently store a timestamp during `InfluxDB::add()` so all variables will receive the timestamp allocated at `sendAll()`. This will be improved in the next version.
 
 Put the device in debug mode with:
 

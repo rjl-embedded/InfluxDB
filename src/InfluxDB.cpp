@@ -14,11 +14,11 @@
    _deviceID = System.deviceID();
    _deviceName = String("particle");
    _databaseName = "sensordata";
+   _currentValue = 0;
    request.port = PORT;  // influxdb port
    request.ip = IP; // DigitalOcean
    request.path = String::format("/write?db=%s&precision=s&u=%s&p=%s",_databaseName.c_str(),username,password);
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
-   _currentValue = 0;
  }
 
  void InfluxDB::add(char *variable_id, double value)
@@ -38,6 +38,7 @@
      // process single value
      (pvalue + _currentValue)->timestamp_val = Time.now();
    }
+
    _currentValue++;
    if (_currentValue > MAX_VALUES) {
      Serial.println("You are sending more than the maximum of consecutive variables");
@@ -47,37 +48,41 @@
 
  bool InfluxDB::sendAll()
  {
-   unsigned long timestampLast;
+   unsigned long lastTimestamp, currentTimestamp;
    String idMeasurement = _deviceName; // e.g. particle
    String tag_set = String::format("deviceID=%s", _deviceID.c_str()); // e.g. deviceID=54395594308
-   String field_set;
-   // build field set e.g. temperature=21.3,humidity=34.5
-   for (int i = 0; i < _currentValue; i++) {
-     // e.g. temperature=21.3
-     String tempString = String::format("%s=%.1f", (pvalue + i)->idName, (pvalue + i)->idValue);
-     if (i>0) {
+
+   for (int i=0; i<_currentValue; i++) {
+     String field_set = makeFieldSet(pvalue + i); // e.g. temperature=21.3
+     currentTimestamp = (pvalue+i)->timestamp_val;
+     while ( (i+1) < _currentValue && currentTimestamp == (pvalue+i+1)->timestamp_val) { // batch
+       i++;
        field_set.concat(",");
+       field_set.concat(makeFieldSet(pvalue+i));
+       currentTimestamp = (pvalue+i)->timestamp_val;
      }
-     field_set.concat(tempString);
+
+     // e.g. particle,deviceID=54395594308 temperature=21.3,humidity=34.5 435234783725
+     String requestString = String::format("%s,%s %s %d", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str(), currentTimestamp);
+
+     // send it
+     request.path = String::format("/write?db=%s&precision=s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
+     request.body = requestString;
+     http.post(request, response);
+
    }
    _currentValue = 0;
-
-   // e.g. particle,deviceID=54395594308 temperature=21.3,humidity=34.5
-   String requestString = String::format("%s,%s %s", idMeasurement.c_str(), tag_set.c_str(), field_set.c_str());
-   request.body = requestString;
-   request.path = String::format("/write?db=%s&u=%s&p=%s",_databaseName.c_str(),_username,_password);
-   http.post(request, response);
-
-   if(_debug) {
-     printDebug(request, response);
-   }
-
    if (response.status == 204) {
      return true;
    } else {
+     printDebug(request, response);
      Particle.publish("ERROR", response.body, PRIVATE);
      return false;
    }
+ }
+
+ String InfluxDB::makeFieldSet(Value * pvalue) {
+   return String::format("%s=%.1f", (pvalue)->idName, (pvalue)->idValue); // e.g. temperature=21.3
  }
 
  void InfluxDB::printDebug(http_request_t &request, http_response_t &response)
