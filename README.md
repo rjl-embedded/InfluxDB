@@ -10,7 +10,7 @@ database.
 
 ## Usage
 
-Build the photoresistor [tutorial](https://docs.particle.io/guide/getting-started/examples/photon/#read-your-photoresistor-function-and-variable), create an InfluxDB database called `sensordata`, add the InfluxDB library to your project, and follow this simple example:
+Create an InfluxDB database called `test`, add the InfluxDB library to your project, and follow this simple example:
 
 ```
 #include "authenticate.h" // InfluxDB credentials
