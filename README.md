@@ -52,6 +52,11 @@ See the [examples](examples) folder for more details.
 
 ## Documentation
 
+Create file `authenticate.h` with your InfluxDB authentication details as follows:
+
+    #define USERNAME "your_username"
+    #define PASSWORD "your_password"
+
 Initialise the client with your InfluxDB authentication details:
 
     InfluxDB idb = InfluxDB(USERNAME, PASSWORD);
