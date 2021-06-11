@@ -6,7 +6,7 @@
  #include "HttpClient.h"
  #include "InfluxDB.h"
 
- InfluxDB::InfluxDB(char* username, char* password)
+ InfluxDB::InfluxDB(const char* username, const char* password)
  {
    _username = username;
    _password = password;
@@ -21,12 +21,12 @@
    pvalue = (Value *)malloc(MAX_VALUES * sizeof(Value));
  }
 
- void InfluxDB::add(char *variable_id, double value)
+ void InfluxDB::add(const char *variable_id, double value)
  {
-   return add(variable_id, value, NULL);
+   return add(variable_id, value, 0UL);
  }
 
- void InfluxDB::add(char *variable_id, double value, unsigned long timestamp)
+ void InfluxDB::add(const char *variable_id, double value, unsigned long timestamp)
  {
    (pvalue + _currentValue)->idName = variable_id;
    (pvalue + _currentValue)->idValue = value;
@@ -48,7 +48,7 @@
 
  bool InfluxDB::sendAll()
  {
-   unsigned long lastTimestamp, currentTimestamp;
+   unsigned long currentTimestamp;
    String idMeasurement = _deviceName; // e.g. particle
    String tag_set = String::format("deviceID=%s", _deviceID.c_str()); // e.g. deviceID=54395594308
 

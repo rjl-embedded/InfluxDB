@@ -19,7 +19,7 @@
 #define PORT 8086
 #endif
 #ifndef MAX_VALUES
-#define MAX_VALUES 1000
+#define MAX_VALUES 1000U
 #endif
 #ifndef DATABASE
 #define DATABASE "sensordata"
@@ -32,29 +32,29 @@
 #include "HttpClient.h"
 
 struct Value {
-    char  *idName;
-    float idValue;
+    const char    *idName;
+    float         idValue;
     unsigned long timestamp_val;
 };
 
 class InfluxDB
 {
 public:
-  InfluxDB(char* username, char* password);
-  void add(char *variable_id, double value);
-  void add(char *variable_id, double value, unsigned long timestamp);
+  InfluxDB(const char* username, const char* password);
+  void add(const char *variable_id, double value);
+  void add(const char *variable_id, double value, unsigned long timestamp);
   bool sendAll();
   String setDatabase(String databaseName);
   String setDeviceName(String databaseName);
   void setDebug(bool debug);
 private:
-  char* _username;
-  char* _password;
+  const char* _username;
+  const char* _password;
   String _deviceID;
   String _deviceName;
   String _databaseName;
   Value* pvalue;
-  uint8_t _currentValue;
+  uint16_t _currentValue;
   HttpClient http;
   http_request_t request;
   http_response_t response;
